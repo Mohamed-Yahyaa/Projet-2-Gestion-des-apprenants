@@ -15,22 +15,27 @@ use App\Http\Controllers\StudentsController;
 |
 */
 
+
+
+
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/index',[PromoController::class, 'Display']);
-Route::get('/create', [PromoController::class, 'Create']);
-Route::Post('ajouter', [PromoController::class, "AddPromotion"]);
-Route::get('/edit/{id}',[PromoController::class,'Edit']);
-Route::post('/update/{id}',[PromoController::class,'Update']);
-Route::get('/delete/{id}',[PromoController::class,'Delete']);
+Route::resource('promotion',PromoController::class);
 Route::get('search',[PromoController::class,'search']);
+Route::get('searchstudent',[StudentsController::class,'search1']);
+
+Route::resource('student',StudentsController::class);
+Route::get('student/create/{id}',[StudentsController::class,'create'])->name('student.create');
+Route::get('student/edit/{id}',[StudentsController::class,'edit'])->name('student.edit');
+// Route::get('apprenants/destroy/{id}',[ApprenantController::class,'destroy']);
 
 
-Route::get('/student/index',[StudentsController::class,'Display']);
-Route::get('/student/create/{id}',[StudentsController::class,'create']);
-Route::post('/student/ajouter',[StudentsController::class,'AddPromotion']);
-Route::get('/student/edit/{id}',[StudentsController::class,'Edit']);
-Route::post('/student/update/{id}',[StudentsController::class,'Update']);
-Route::get('/student/delete/{id}/{idd}',[StudentsController::class,'Delete']);
+
+
+
+
+
+

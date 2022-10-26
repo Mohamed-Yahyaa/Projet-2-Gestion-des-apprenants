@@ -1,59 +1,84 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Promotion;
 use App\Models\Student;
-
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 
 class StudentsController extends Controller
 {
-    //
-    public function Display(){
-        $Student = Student::select("*")->get();
-        return $Student;
-    }
-
-    public function create(){
-
-        return view ('create');
-    }
-
-    public function AddPromotion(Request $request){
-            $id = $request->id ;
-        $Student = new student();
-        $Student ->First_name=$request->input('name');
-        $Student ->Last_name=$request->input('lastname');
-        $Student ->Email=$request->input('email');
-        $Student ->PromotionID = $id;
-        $Student ->save();
-        return redirect("edit/".$id);
-      
-    }
-
-    public function Edit($id){
-        $Student = Student::where('Id_student',$id)->get();
-        return view("student.edit",compact('Student'));
-    }
-
-    public function Update(Request $request,$id){
-        Student::where("Id_student",$id)->update([
-            "First_name" => $request->first_name,
-            'Last_name' => $request->last_name,
-            'Email' => $request->email,
-
-        ]);
-    $url="Edit/".$request->idPromotion;
-        return redirect($url);
+   
+   
+    public function create($PromotionID)
+    {
+        
+        return view('student.create',["PromotionID" => $PromotionID]);
     }
     
-    public function Delete($id,$idd){
-        $promotion = Student:: where("Id_student",$id)->delete();
-        if($promotion){
-            $url="Edit/".$idd;
-            return redirect($url);
-        }
+    public function store(Request $request)
+    {
+        $student=new Student();
+        $student->First_name=$request->input('First_name');
+        $student->Last_name=$request->input('Last_name');
+        $student->Email=$request->input('Email');
+        $student->PromotionID=$request->input('PromotionID');
 
+        $student->save();
+
+        return redirect()->route('promotion.edit',$student->PromotionID);
+    }
+    public function edit($id){
+
+        return view('student.edit',['student'=>Student::findOrFail($id)]);
+    }
+    public function update(request $request, $id){
+        $student=Student::findOrFail($id);
+        $student->First_name=strip_tags($request->input('First_name'));
+        $student->Last_name=strip_tags($request->input('Last_name'));
+        $student->Email=strip_tags($request->input('Email'));
+        $student->PromotionID=strip_tags($request->input('PromotionID'));
+
+        $student->save();
+
+        return redirect()->route('promotion.edit', $student->PromotionID);
 
     }
-}
+
+    public function destroy($id){
+        $student=Student::findOrFail($id);
+        $student->delete();
+        return redirect()->route('promotion.edit', $student->PromotionID);
+
+    }
+
+    public function search1(Request $request){
+        $output="";
+        $id = $request->PromotionID;
+        $students=Student:: where([
+            ['PromotionID','=',$id],
+            ['First_name','Like',$request->search.'%']
+        ])->get();
+
+        foreach($students as $student)
+        {
+            $output.=
+            '<tr>
+            <td> '.$student->First_name.' </td>
+            <td> '.$student->Last_name.' </td>
+            <td> '.$student->Email.' </td>
+            <td> 
+            <a href="'.route('student.edit',$student->Id_student).'">Edit</a>
+                <form action="'.route('student.destroy',$student->Id_student).'" method="POST">
+                    <input type="hidden" name="_token" value="yb5AihWDKb7pZahkmAzVDUI5s5u0fCXfajDetPDe">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input  type="submit" value="Delete" />
+                </form>
+
+        </td>
+            </td>
+           
+            </tr>';
+        }
+        return response($output);
+    }
+ } 
