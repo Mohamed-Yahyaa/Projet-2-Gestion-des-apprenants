@@ -25,7 +25,7 @@ Route::get('/', function () {
 
 Route::resource('promotion',PromoController::class);
 Route::get('search',[PromoController::class,'search']);
-Route::get('searchstudent',[StudentsController::class,'search1']);
+Route::get('searchstudent',[StudentsController::class,'Search']);
 
 Route::resource('student',StudentsController::class);
 Route::get('student/create/{id}',[StudentsController::class,'create'])->name('student.create');

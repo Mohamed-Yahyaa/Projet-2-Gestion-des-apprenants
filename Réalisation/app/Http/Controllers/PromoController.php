@@ -51,15 +51,15 @@ class PromoController extends Controller
         $toUpdate->NamePromotion=strip_tags($request->input('NamePromotion'));
         $toUpdate->save();
 
-        return redirect()->route('promotion.index');
+        return back();
     }
 
 
     public function destroy($id)
     {
-        $todelete=Promotion::findOrFail($id);
-        $todelete->delete();
-        return redirect(route('promotion.index'));
+        $promotion=Promotion::findOrFail($id);
+        $promotion->delete();
+        return redirect()->route('promotion.index');
     }
 
     public function search(Request $request){
@@ -69,13 +69,33 @@ class PromoController extends Controller
             if($promotions){
                 foreach($promotions as $promotion){
                     $output.='<tr>.
+                    <td>'.$promotion->id.'</td>
                     <td>'.$promotion->NamePromotion.'</td>
                     <td>
-                        <a href="'.route('promotion.edit',$promotion->id).'">Edit</a>
+                    <a href="'.route('promotion.edit',$promotion->id).'" style=" text-decoration: none;
+                    font-family: 6px;
+                    color: white;
+                    padding:5px 5px;
+                    float :left;
+                    
+                    background-color: #4CAF50;
+                    
+                    width:50px;
+                    font-weight: 500;">Edit</a>
                         <form action="'.route('promotion.destroy',$promotion->id).'" method="POST">
                         <input type="hidden" name="_token" value="yb5AihWDKb7pZahkmAzVDUI5s5u0fCXfajDetPDe">
                         <input type="hidden" name="_method" value="DELETE">
-                        <input  type="submit" value="Delete" />
+                        <input  type="submit" value="Delete" style=" background-color: #ff0000; /* Green */
+                        border: none;
+                        color: white;
+                        float :right;
+                        padding: 5px 5px;
+                        text-align: center;
+                        font-weight: 500;
+                        text-decoration: none;
+                        display: inline-block;
+                       
+                        font-size: 16px;" />
                     </form>
 
                     </td>

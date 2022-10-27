@@ -10,7 +10,8 @@ class Student extends Model
     use HasFactory;
 
     protected $table = "students";
-    protected $fulible =["Id_student","First_name","Last_name","Email"];
+    protected $fillable =["Id_student","First_name","Last_name","Email", "PromotionID"];
+    protected $primaryKey = 'Id_student';
 
     public $timetamps = false;
 }

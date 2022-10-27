@@ -20,7 +20,7 @@ return new class extends Migration
 
         });
     Schema::create('Students', function (Blueprint $table) {
-        $table->increments("Id_student");
+        $table->id('Id_student');
         $table->string('First_name')->nullable();
         $table->string('Last_name')->nullable();
         $table->string('Email')->nullable();

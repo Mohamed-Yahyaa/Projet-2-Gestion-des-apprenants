@@ -29,16 +29,24 @@ class StudentsController extends Controller
     }
     public function edit($id){
 
-        return view('student.edit',['student'=>Student::findOrFail($id)]);
+        $student = Student::where('Id_student',$id)->firstOrFail();
+        return view('student.edit',['student'=> $student]);
     }
     public function update(request $request, $id){
-        $student=Student::findOrFail($id);
-        $student->First_name=strip_tags($request->input('First_name'));
-        $student->Last_name=strip_tags($request->input('Last_name'));
-        $student->Email=strip_tags($request->input('Email'));
-        $student->PromotionID=strip_tags($request->input('PromotionID'));
+        $student=Student::where('Id_student',$id)->firstOrFail();
+        // dd($student);
+        $student->update([
+            'First_name' => strip_tags($request->input('First_name')),
+            'Last_name' => strip_tags($request->input('Last_name')),
+            'Email' => strip_tags($request->input('Email')),
+            'PromotionID' => strip_tags($request->input('PromotionID')),
+        ]);
+        // $student->First_name=;
+        // $student->Last_name=strip_tags($request->input('Last_name'));
+        // $student->Email=strip_tags($request->input('Email'));
+        // $student->PromotionID=strip_tags($request->input('PromotionID'));
 
-        $student->save();
+        // $student->save();
 
         return redirect()->route('promotion.edit', $student->PromotionID);
 
@@ -51,7 +59,7 @@ class StudentsController extends Controller
 
     }
 
-    public function search1(Request $request){
+    public function Search(Request $request){
         $output="";
         $id = $request->PromotionID;
         $students=Student:: where([
